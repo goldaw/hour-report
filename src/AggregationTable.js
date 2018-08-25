@@ -37,18 +37,3 @@ const mapDispatchToProps={
 
 };
 export default connect(mapStateToProps,mapDispatchToProps)(Aggregationtable);
-/*class aggregationtable extends React.Component{
-    constructor(props){
-        super(props)
-        this.state={...INITAL_STATE};
-
-    }
-
-    render(){
-        return(
-            <div>
-                <ReactTable></ReactTable>
-            </div>
-        );
-    }
-} */

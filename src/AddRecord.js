@@ -1,5 +1,4 @@
 import React from 'react';
-//import store from './store/index.js';
 import {connect} from 'react-redux';
 import store from './store';
 import {submitRecord} from './actions/records'
@@ -42,8 +41,8 @@ class AddRecord extends React.Component{
         this.handleClose=this.handleClose.bind(this);
         this.handleChangeDate=this.handleChangeDate.bind(this);
         this.validateField=this.validateField.bind(this);
-        this.validateForm=this.validateForm.bind(this);
         this.handleChangeSelect=this.handleChangeSelect.bind(this);
+        this.cleanDialog=this.cleanDialog.bind(this);
     }
 
     validateField(fieldName,value){
@@ -69,21 +68,9 @@ class AddRecord extends React.Component{
         }
         this.setState({
           formErrors: validateErrors,
-          //userNameValid:userNameValid,
          
         
-             }, this.validateForm());
-        }
-
-        validateForm() {
-         /*   var isValid=(this.state.formErrors.userNameValue===""
-            &&this.state.formErrors.startValue===""&&this.state.formErrors.endValue==="");
-          this.setState({
-              formIsValid:isValid
-              /* this.state.userNameValid&&this.state.startValid&&
-              this.state.endValid*/
-        
-         // });
+             },);
         }
     
     handleFieldChange(name,value){
@@ -97,7 +84,6 @@ class AddRecord extends React.Component{
     }
     handleChangeDate(date) {
         let formatDate=moment(date).format('YYYY-MM-DD');
-      //  let dateformat=date(formatDate);
         this.setState({
           selectDate:date ,
           selectDateFormat:formatDate,
@@ -108,6 +94,14 @@ class AddRecord extends React.Component{
     }
     handleClose(){
         this.setState({open:false});
+    }
+    cleanDialog(){
+        this.setState({
+            selectDateFormat:'',
+            userNameValue:'',
+            startValue:'',
+            endValue:'',
+        })
     }
     handleSubmit(){
         this.validateField('userNameValue',this.state.userNameValue);
@@ -120,11 +114,9 @@ class AddRecord extends React.Component{
         {
         const record={
             date:this.state.selectDateFormat?this.state.selectDateFormat:moment().format('YYYY-MM-DD'),
-           // username:this.state.userNameValue,
             start:this.state.startValue,
             end:this.state.endValue,
-        };//recordsDefault
-        //this.state.recordsArr.push(record)
+        };
         const userNameRecord=this.state.userNameValue;
 
         if(this.state.recordsArray[this.state.userNameValue])
@@ -133,20 +125,17 @@ class AddRecord extends React.Component{
         { 
         let recordPair=[];
         recordPair.push(record);
-        //var key = "happyCount";
         var pair = {};
         pair[userNameRecord] = recordPair;
-        //myArray.push(obj);
-        //var pair = {[userNameRecord]: recordPair};
         this.state.recordsArray = {...this.state.recordsArray, ...pair};
         }
-    //this.state.recordsArray[this.state.userNameValue].push(record);
         console.log(this.state.recordsArray);
        
        store.dispatch(submitRecord({
         recordsArray:this.state.recordsArray,
         monthSelected:this.state.monthSelected,
     }));
+    this.cleanDialog();
     this.handleClose();
     }
     }
@@ -165,6 +154,7 @@ class AddRecord extends React.Component{
             value={this.state.monthSelected}
             onChange={(event)=>{this.handleChangeSelect('monthSelected',event.target.value)}}
           >
+            <MenuItem value={0}>all</MenuItem>
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
